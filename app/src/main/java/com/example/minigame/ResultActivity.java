@@ -8,23 +8,38 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ResultActivity extends AppCompatActivity {
 
     int highScore;
+    ImageView medal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         TextView scoreLabel = (TextView)findViewById(R.id.scoreLabel);
         TextView highscoreLabel = (TextView)findViewById(R.id.highScoreLabel);
         TextView gamesPlayedLabel = (TextView)findViewById(R.id.gamesPlayedLabel);
+        medal = (ImageView)findViewById(R.id.medal);
 
         int score = getIntent().getIntExtra("score",0);
         scoreLabel.setText(""+score);
+
+        if(score < 10){
+            medal.setImageResource(R.drawable.bronze);
+        }else if(score>=30){
+            medal.setImageResource(R.drawable.gold);
+        }else{
+            medal.setImageResource(R.drawable.silver);
+        }
 
         SharedPreferences sharedPreferences = getSharedPreferences("highscore", Context.MODE_PRIVATE);
         highScore = sharedPreferences.getInt("highscore",0);
@@ -53,6 +68,7 @@ public class ResultActivity extends AppCompatActivity {
         finish();
     }
 
+    //disable return button
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         if(event.getAction() == KeyEvent.ACTION_DOWN){

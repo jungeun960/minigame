@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -271,6 +273,52 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(),ResultActivity.class);
             intent.putExtra("score",score);
             startActivity(intent);
+        }
+    }
+
+    //disable return button
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getAction() == KeyEvent.ACTION_DOWN){
+            switch (event.getKeyCode()){
+                case  KeyEvent.KEYCODE_BACK:
+                    return  true;
+            }
+        }
+        return  super.dispatchKeyEvent(event);
+    }
+
+    public void pauseGame(View view){
+        if(pause_flg == false){
+            pause_flg = true;
+            timer.cancel();
+            timer = null;
+
+            Drawable d = getResources().getDrawable(R.drawable.ic_action_paused);
+            pauseLb.setBackgroundDrawable(d);
+
+            frameLb.setVisibility(View.VISIBLE);
+        }else {
+            pause_flg=false;
+
+            Drawable d = getResources().getDrawable(R.drawable.ic_action_pause);
+            pauseLb.setBackgroundDrawable(d);
+
+            frameLb.setVisibility(View.GONE);
+
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            position();
+                        }
+                    });
+                }
+            },0,20);
+
         }
     }
 }

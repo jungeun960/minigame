@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -31,4 +32,17 @@ public class StartActivity extends AppCompatActivity {
             }
         });
     }
+
+    //disable return button
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if(event.getAction() == KeyEvent.ACTION_DOWN){
+            switch (event.getKeyCode()){
+                case  KeyEvent.KEYCODE_BACK:
+                    return  true;
+            }
+        }
+        return  super.dispatchKeyEvent(event);
+    }
+
 }
